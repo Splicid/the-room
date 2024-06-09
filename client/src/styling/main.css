@@ -1,0 +1,67 @@
+.username-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    padding: 1.25rem; /* 20px */
+  }
+  
+  form {
+    background-color: #000000;
+    padding: 1.25rem; /* 20px */
+    border-radius: 0.5rem; /* 8px */
+    box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.1); /* 10px */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 25rem; /* 400px */
+  }
+  
+  .form-label {
+    margin-bottom: 0.625rem; /* 10px */
+    font-weight: bold;
+  }
+  
+  .username-input {
+    padding: 0.625rem; /* 10px */
+    margin-bottom: 1.25rem; /* 20px */
+    border: 0.0625rem solid #ccc; /* 1px */
+    border-radius: 0.25rem; /* 4px */
+    font-size: 1rem; /* 16px */
+  }
+  
+  .username-button {
+    padding: 0.625rem; /* 10px */
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 0.25rem; /* 4px */
+    font-size: 1rem; /* 16px */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .username-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 48rem) { /* 768px */
+    .username-form {
+      padding: 0.625rem; /* 10px */
+    }
+  
+    form {
+      padding: 0.9375rem; /* 15px */
+    }
+  
+    .username-input, .username-button {
+      font-size: 0.875rem; /* 14px */
+    }
+  }
+  
+  @media (max-width: 30rem) { /* 480px */
+    .username-input, .username-button {
+      font-size: 0.75rem; /* 12px */
+    }
+  }

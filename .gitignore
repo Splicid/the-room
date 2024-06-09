@@ -1,0 +1,22 @@
+# Dependency directories
+node_modules/
+venv/
+
+# Compiled TypeScript files
+*.js
+*.js.map
+
+# Editor directories and files
+.vscode/
+.idea/
+
+# Environment files
+.env
+
+# Other generated files
+dist/
+build/
+coverage/
+
+# Log files
+*.log
