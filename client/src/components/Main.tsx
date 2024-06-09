@@ -1,47 +1,64 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Socket, io } from "socket.io-client"
 import cors from "cors"
 import '..//styling/main.css'
 
+const socket = io('http://localhost:5000');
+interface FormData {
+    username: string;
+    userId: string;
+}
+
 
 const Main = () => {
 
-    const socket = io('http://127.0.0.1:5000');
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         username: '',
+        userId: '',
     })
+
+    useEffect(() => {
+
+        socket.on('connect', () => {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                userId: socket.id || ''
+            }));
+        });
+
+    }, []);
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
-        }))
-    }
+        }));
+    };
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        //Socket IO testing
-        socket.on('connection', () => {
-            console.log(socket.connected)
-        })
         const postData = new FormData()
-
         postData.append('username', formData.username)
+        postData.append('userId', formData.userId)
+
+        console.log(formData)
+
         fetch('http://localhost:5000/', {
             method: 'POST',
             headers: new Headers({'content-type': 'application/json'}),
             body: postData,
         })
-            .then((response) => response.text())
-            .then((data) => {
-                //console.log(data)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        .then((response) => response.text())
+        .then((data) => {
+            //console.log(data)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
         
+        socket.emit('message', formData);
     }
 
     return (

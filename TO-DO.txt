@@ -1,3 +1,6 @@
 Current TO DO:
-- COnfigure socket.io for client and server side
-    - Simple messages being sent
+- Configure socket.io for client and server side
+    - Simple messages being sent - Done
+    - Create a general room for all users
+    - User enters username -> they get assigned a key
+        - Redirect to main page 
