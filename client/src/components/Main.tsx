@@ -18,7 +18,6 @@ const Main = () => {
     })
 
     useEffect(() => {
-
         socket.on('connect', () => {
             setFormData((prevFormData) => ({
                 ...prevFormData,
@@ -43,7 +42,9 @@ const Main = () => {
         postData.append('username', formData.username)
         postData.append('userId', formData.userId)
 
-        console.log(formData)
+        socket.on('userId', (data) => {
+            console.log(data)
+        })
 
         fetch('http://localhost:5000/', {
             method: 'POST',
