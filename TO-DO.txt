@@ -4,3 +4,8 @@ Current TO DO:
     - Create a general room for all users
     - User enters username -> they get assigned a key
         - Redirect to main page 
+
+- make sure users can't use the same name
+- Names get freed up when a user disconnects - DONE
+- Might need sessions 
+- Setup form error state

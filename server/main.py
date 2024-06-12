@@ -1,4 +1,4 @@
-from flask import request, Flask
+from flask import request, Flask, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
@@ -6,17 +6,30 @@ app = Flask(__name__)
 CORS(app)
 
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:5173")
-
 use_list = {}
 
-
-
 #Routes for messages
-@socketio.on('message')
-def my_event(userData):
-    use_list[userData['username']] = userData['userId']
+@socketio.on('client_connection')
+def my_event(data):
+    current_user = data['username']
+    if current_user in use_list:
+        error_message = 'Username is already taken'
+        emit('error', error_message)
+    else:   
+        use_list[data['username']] = data['userId']
+        emit('userId', use_list)
     print(use_list)
 
+@socketio.on('client_disconnected')
+def user_joined(data):
+    current_user = data['data']['username']
+    if current_user in use_list:
+        use_list.pop(current_user)
+    print(use_list)
+
+@socketio.on('connection')
+def user_disconnect():
+    print('A user has connected')
 
 #Routes for data 
 @app.route("/", methods=['POST'])
