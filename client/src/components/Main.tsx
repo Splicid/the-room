@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import { Socket, io } from "socket.io-client";
-import '..//styling/main.css';
+import Cookies from "js-cookie";
+import "..//styling/main.css";
 
 const socket = io('http://localhost:5000');
 interface FormData {
@@ -17,11 +18,9 @@ const Main = () => {
         username: '',
         userId: '',
     });
-    
     const [errorState, setErrorState] = useState<userError>({
         formError: false,
     });
-    
     const formDataRef = useRef(formData);
 
     useEffect(() => {
@@ -47,12 +46,11 @@ const Main = () => {
                 socket.disconnect();
             };
         }).on('error', (error) => {
-
+            setErrorState(prevState => ({ ...prevState, formError: true }));
             console.log('Socket connection error:', error);
         })
-
     }, []);
-
+    
     const handleInput = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         setFormData((prevFormData) => ({
@@ -68,9 +66,11 @@ const Main = () => {
             username: formData.username,
             userId: formData.userId,
         };
-
-        socket.on('userId', (data) => {
-            console.log(data);
+        socket.on('user_connected', (data) => {
+            // Create session token with Info
+            Cookies.set('user_token', data, { expires: 7, path: "/" })
+            const userToken = Cookies.get('user_token')
+            console.log(userToken)
         });
 
         fetch('http://localhost:5000/', {
@@ -87,13 +87,16 @@ const Main = () => {
         });
 
         socket.emit('client_connection', formData);
-        console.log(formData);
     };
 
     return (
         <div className='username-form'>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="username" className='form-label'>Enter username:</label>
+                {errorState.formError ? (
+                    <label htmlFor="username" className='form-label'>Invalid username pick another:</label>
+                ) : (
+                    <label htmlFor="username" className='form-label'>Enter username:</label>
+                )}
                 <input className='username-input' value={formData.username} onChange={handleInput} type="text" name='username' />
                 <button type='submit' className='username-button'> Submit </button>
             </form>
