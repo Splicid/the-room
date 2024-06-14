@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Socket, io } from "socket.io-client";
-import Cookies from "js-cookie";
 import "..//styling/main.css";
 
 const socket = io('http://localhost:5000');
@@ -28,17 +27,32 @@ const Main = () => {
     }, [formData]);
 
     useEffect(() => {
+
+        // Check if session cookie exists
+        const userIdFromCookie = document.cookie.replace(/(?:(?:^|.*;\s*)userId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        if (userIdFromCookie) {
+            setFormData(prevFormData => ({
+                ...prevFormData,
+                userId: userIdFromCookie
+            }));
+        }
+
         socket.on('connect', () => {
             setFormData((prevFormData) => ({
                 ...prevFormData,
                 userId: socket.id || ''
             }));
 
+            const invalidateCookie = () => {
+                document.cookie = 'userId' + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            }
+
             const handleBeforeUnload = () => {
+                // Removing cookie with userId data
+                invalidateCookie();
                 socket.emit('client_disconnected', { data: formDataRef.current });
                 socket.disconnect();
             };
-
             window.addEventListener('beforeunload', handleBeforeUnload);
 
             return () => {
@@ -68,14 +82,13 @@ const Main = () => {
         };
         socket.on('user_connected', (data) => {
             // Create session token with Info
-            Cookies.set('user_token', data, { expires: 7, path: "/" })
-            const userToken = Cookies.get('user_token')
-            console.log(userToken)
+
         });
 
+        document.cookie = `userId=${formData.userId}; path=/`;
         fetch('http://localhost:5000/', {
             method: 'POST',
-            headers: new Headers({ 'Content-Type': 'application/json' }),
+            headers: new Headers({ 'Content-Type': 'application/json', 'Cookie': document.cookie }),
             body: JSON.stringify(postData),
         })
         .then((response) => response.text())

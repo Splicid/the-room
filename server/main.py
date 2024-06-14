@@ -17,7 +17,6 @@ def my_event(data):
         emit('error', error_message)
     else:   
         use_list[data['username']] = data['userId']
-        print('we got here')
         emit('user_connected', use_list)
     print(use_list)
 
@@ -36,8 +35,17 @@ def user_joined(data):
 #Routes for data 
 @app.route("/", methods=['POST'])
 def hello_world():
-    name = request.form.get('username')
-    return "Test"
+    name = request.json.get('username')
+    user_id = request.json.get('userId')
+    print(user_id)
+    # Here, you can perform session management tasks using the received userId
+    if user_id in use_list.values():
+        # Session is active
+        # Perform your tasks for active session
+        return jsonify({"message": "Session is active"})
+    else:
+        # Session is not active, handle invalid session
+        return jsonify({"message": "Session is expired or invalid"}),
 
 if __name__ == '__main__':
     socketio.run(app)

@@ -9,3 +9,5 @@ Current TO DO:
 - Names get freed up when a user disconnects - DONE
 - Might need sessions 
 - Setup form error state
+- Configure cookie session expiry - everymessage would check the cookie and 
+  invalidate it if its past the time
