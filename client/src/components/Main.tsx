@@ -73,33 +73,38 @@ const Main = () => {
         }));
     };
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const setCookie = async (name: String, value: String, minutes: number) => {
+        let now = new Date();
+        const expiryTime = new Date(now.getTime() + minutes * 60000);
+        document.cookie = `${name}=${value}; expires=${expiryTime.toUTCString()}; path=/;`;
+    }
+
+    const fetchData = async (postData) => {
+        try {
+            const response = await fetch('http://localhost:5000/', {
+                method: 'POST',
+                headers: new Headers({ 'Content-Type': 'application/json', 'Cookie': document.cookie }),
+                body: JSON.stringify(postData)
+            })
+            const data = await response.text();
+            console.log(document.cookie)
+            socket.emit('client_connection', formData);
+        }
+        catch (error){
+            console.log(error);
+        }
+    }
+
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
         const postData = {
             username: formData.username,
             userId: formData.userId,
         };
-        socket.on('user_connected', (data) => {
-            // Create session token with Info
 
-        });
-
-        document.cookie = `userId=${formData.userId}; path=/`;
-        fetch('http://localhost:5000/', {
-            method: 'POST',
-            headers: new Headers({ 'Content-Type': 'application/json', 'Cookie': document.cookie }),
-            body: JSON.stringify(postData),
-        })
-        .then((response) => response.text())
-        .then((data) => {
-            // console.log(data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-
-        socket.emit('client_connection', formData);
+        await setCookie("userId", formData.userId, 5);
+        await fetchData(postData);
     };
 
     return (

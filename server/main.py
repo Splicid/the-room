@@ -35,17 +35,12 @@ def user_joined(data):
 #Routes for data 
 @app.route("/", methods=['POST'])
 def hello_world():
-    name = request.json.get('username')
-    user_id = request.json.get('userId')
-    print(user_id)
-    # Here, you can perform session management tasks using the received userId
-    if user_id in use_list.values():
-        # Session is active
-        # Perform your tasks for active session
-        return jsonify({"message": "Session is active"})
+    print(request.cookies)
+    if 'userId' in request.cookies:
+        return 'We have a cookie'
     else:
-        # Session is not active, handle invalid session
-        return jsonify({"message": "Session is expired or invalid"}),
+        return 'We didnt find anything'
+
 
 if __name__ == '__main__':
     socketio.run(app)
