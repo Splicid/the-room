@@ -83,11 +83,15 @@ const Main = () => {
         try {
             const response = await fetch('http://localhost:5000/', {
                 method: 'POST',
-                headers: new Headers({ 'Content-Type': 'application/json', 'Cookie': document.cookie }),
+                headers: new Headers({ 
+                    'Content-Type': 'application/json',
+                    'Cookie': document.cookie,
+                 }),
+                credentials: 'include',
                 body: JSON.stringify(postData)
             })
             const data = await response.text();
-            console.log(document.cookie)
+            console.log(data)
             socket.emit('client_connection', formData);
         }
         catch (error){

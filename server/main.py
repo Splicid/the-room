@@ -3,7 +3,8 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
+
 
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:5173")
 use_list = {}
@@ -35,7 +36,7 @@ def user_joined(data):
 #Routes for data 
 @app.route("/", methods=['POST'])
 def hello_world():
-    print(request.cookies)
+    print(request.cookies.get('userId'))
     if 'userId' in request.cookies:
         return 'We have a cookie'
     else:
