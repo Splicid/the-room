@@ -101,14 +101,19 @@ const Main = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
-        const postData = {
-            username: formData.username,
-            userId: formData.userId,
-        };
-
-        await setCookie("userId", formData.userId, 5);
-        await fetchData(postData);
+        
+        if (formData.username == null || formData.username == '')
+            {
+             return false;
+            } 
+            else{
+                const postData = {
+                    username: formData.username,
+                    userId: formData.userId,
+                };
+                await setCookie("userId", formData.userId, 5);
+                await fetchData(postData);
+            }
     };
 
     return (
