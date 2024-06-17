@@ -1,13 +1,13 @@
 Current TO DO:
 - Configure socket.io for client and server side
     - Simple messages being sent - Done
-    - Create a general room for all users
+    - Create a general room for all users - Next to do
     - User enters username -> they get assigned a key
-        - Redirect to main page 
+        - Redirect to main page - Currently working on
 
 - make sure users can't use the same name - DONE 
 - Names get freed up when a user disconnects - DONE
-- Might need sessions 
-- Setup form error state
+- Might need sessions - Work in progress
+- Setup form error state - DONE
 - Configure cookie session expiry - everymessage would check the cookie and 
-  invalidate it if its past the time
+  invalidate it if its past the time - Will do later

@@ -12,6 +12,10 @@ interface userError {
     formError: boolean;
 }
 
+interface textBoxError {
+    textBox: boolean;
+}
+
 const Main = () => {
     const [formData, setFormData] = useState<FormData>({
         username: '',
@@ -20,6 +24,10 @@ const Main = () => {
     const [errorState, setErrorState] = useState<userError>({
         formError: false,
     });
+    const [emptyForm, setEmptyForm] = useState<textBoxError>({
+        textBox: false,
+    })
+    
     const formDataRef = useRef(formData);
 
     useEffect(() => {
@@ -104,14 +112,14 @@ const Main = () => {
         
         if (formData.username == null || formData.username == '')
             {
-             return false;
-            } 
+                setEmptyForm({textBox: true})
+            }
             else{
                 const postData = {
                     username: formData.username,
                     userId: formData.userId,
                 };
-                await setCookie("userId", formData.userId, 5);
+                await setCookie("userId", formData.userId, 1);
                 await fetchData(postData);
             }
     };
@@ -124,7 +132,7 @@ const Main = () => {
                 ) : (
                     <label htmlFor="username" className='form-label'>Enter username:</label>
                 )}
-                <input className='username-input' value={formData.username} onChange={handleInput} type="text" name='username' />
+                <input className={emptyForm.textBox ? ('username-error'): ('username-input')} value={formData.username} onChange={handleInput} type="text" name='username'/>
                 <button type='submit' className='username-button'> Submit </button>
             </form>
         </div>

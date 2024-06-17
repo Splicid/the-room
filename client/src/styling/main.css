@@ -30,6 +30,14 @@
     font-size: 1rem; /* 16px */
   }
   
+  .username-error {
+    padding: 0.625rem; /* 10px */
+    margin-bottom: 1.25rem; /* 20px */
+    border: 0.0625rem solid #ff0000; /* 1px */
+    border-radius: 0.25rem; /* 4px */
+    font-size: 1rem; /* 16px */
+  }
+  
   .username-button {
     padding: 0.625rem; /* 10px */
     background-color: #007bff;
