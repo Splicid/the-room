@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Socket, io } from "socket.io-client";
 import "..//styling/main.css";
+import { redirect, useNavigate } from "react-router-dom";
 
 const socket = io('http://localhost:5000');
+
 interface FormData {
     username: string;
     userId: string;
@@ -17,6 +19,7 @@ interface textBoxError {
 }
 
 const Main = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>({
         username: '',
         userId: '',
@@ -35,7 +38,6 @@ const Main = () => {
     }, [formData]);
 
     useEffect(() => {
-
         // Check if session cookie exists
         const userIdFromCookie = document.cookie.replace(/(?:(?:^|.*;\s*)userId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         if (userIdFromCookie) {
@@ -70,9 +72,14 @@ const Main = () => {
         }).on('error', (error) => {
             setErrorState(prevState => ({ ...prevState, formError: true }));
             console.log('Socket connection error:', error);
-        })
+        });
+
+        socket.on('user_connected', (data) => {
+            navigate('/users')
+        });
+
     }, []);
-    
+
     const handleInput = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         setFormData((prevFormData) => ({
@@ -86,7 +93,7 @@ const Main = () => {
         const expiryTime = new Date(now.getTime() + minutes * 60000);
         document.cookie = `${name}=${value}; expires=${expiryTime.toUTCString()}; path=/;`;
     }
-
+    
     const fetchData = async (postData) => {
         try {
             const response = await fetch('http://localhost:5000/', {
@@ -101,6 +108,7 @@ const Main = () => {
             const data = await response.text();
             console.log(data)
             socket.emit('client_connection', formData);
+            socket.emit('join_room', { room: 'main-room' }); // Emit event to join room
         }
         catch (error){
             console.log(error);

@@ -10,4 +10,5 @@ Current TO DO:
 - Might need sessions - Work in progress
 - Setup form error state - DONE
 - Configure cookie session expiry - everymessage would check the cookie and 
-  invalidate it if its past the time - Will do later
+  invalidate it if its past the time - DONE
+- Fix why other users can't see eachtothers messages - Current Task
