@@ -14,28 +14,26 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
     const parts = str.split('=');
     const userId = parts[1];
     
-    // Only emit the send event when there's text to send
     if (text.trim()) {
-      socket.emit('send', userId);
+      socket.emit('join_room', { userId: userId, room: 'main-room' });
+      socket.emit('send', { userId: userId, message: text.trim() });
+      
+      setText(''); // Clear the text input after sending the message
     }
   };
 
   useEffect(() => {
-    const handleReceiveChat = (username: string) => {
-      
-      if (text.trim()) {
-        onSendMessage(username, text);
-        setText(''); // Clear the text input after sending the message
-      }
+    const handleReceiveChat = (data: { username: string, message: string }) => {
+      console.log(data.username, data.message, data)
+      onSendMessage(data.username, data.message);
     };
 
     socket.on('send_chat', handleReceiveChat);
 
-    // Cleanup the effect to avoid adding multiple listeners
     return () => {
       socket.off('send_chat', handleReceiveChat);
     };
-  }, [text, onSendMessage]); // Adding text and onSendMessage as dependencies
+  }, [onSendMessage]);
 
   return (
     <div style={{ display: 'flex', padding: '10px', borderTop: '1px solid #ddd' }}>
