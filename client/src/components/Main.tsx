@@ -108,7 +108,7 @@ const Main = () => {
             const data = await response.text();
             console.log(data)
             socket.emit('client_connection', formData);
-            socket.emit('join_room', { room: 'main-room' }); // Emit event to join room
+
         }
         catch (error){
             console.log(error);

@@ -24,11 +24,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
 
   useEffect(() => {
     const handleReceiveChat = (data: { username: string, message: string }) => {
-      console.log(data.username, data.message, data)
       onSendMessage(data.username, data.message);
     };
 
     socket.on('send_chat', handleReceiveChat);
+
 
     return () => {
       socket.off('send_chat', handleReceiveChat);

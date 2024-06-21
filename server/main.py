@@ -40,8 +40,8 @@ def handle_join_room(data):
 def user_disconnected(data):
     current_user = data['data']['username']
     if current_user in use_list:
+        emit('send_chat', {'username': 'System', 'message': f'{current_user} has left the room.'}, room=default_room)
         leave_room(default_room)
-        print(current_user + ' has left the room.')
         use_list.pop(current_user)
 
 @socketio.on('send')
